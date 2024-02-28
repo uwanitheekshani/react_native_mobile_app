@@ -1,19 +1,5 @@
-// import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
-// import React, { useEffect, useState } from 'react'
-// import { NativeBaseProvider, ScrollView,Center, VStack, Input, TextArea, Button } from "native-base";
-// import { FloatingAction } from "react-native-floating-action";
-// import AddVehicleForm from './../components/AddVehicleForm';
-
-// export default function AddVehicle(props) {
-
-//   return (
-//     <AddVehicleForm />
-//   );
-// }
-
-
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, Button, FlatList, Alert, ImageBackground, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, Button, Modal, FlatList, Alert, ImageBackground, TouchableHighlight, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import cartImage from '../assets/20807890.jpg'
 import ImagePicker from 'react-native-image-picker';
@@ -25,6 +11,7 @@ const AddPhoneScreen = ({ navigation }) => {
     const [code, setCode] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
 
     // useEffect(() => {
     //     fetchPhones();
@@ -41,39 +28,34 @@ const AddPhoneScreen = ({ navigation }) => {
     // };
 
     const handleAddPhone = async () => {
-        const payload = {
-            phoneCode: code,
-            phoneModel: phoneModel,
-            phoneDescription: description,
-            phonePrice: price,
-        };
-        try {
-            const response = await axios.post('http://localhost:3500/api/v1/savePhone', payload);
-            console.log('Response:', response.data);
-            // Check response status and handle accordingly
-            if (response.status === 201) {
-                // Phone added successfully
-                console.log('Phone added successfully:', response.data.phone);
-                // Do something with the added phone data if needed
-            } else {
-                console.error('Error adding phone:', response.data.error);
-                // Handle other status codes (e.g., 400 for phone already exists, 500 for server error)
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            // Handle network errors or other exceptions
-        }
+        // const payload = {
+        //     phoneCode: code,
+        //     phoneModel: phoneModel,
+        //     phoneDescription: description,
+        //     phonePrice: price,
+        // };
+        // try {
+        //     const response = await axios.post('http://localhost:3500/api/v1/savePhone', payload);
+        //     console.log('Response:', response.data);
+        //     // Check response status and handle accordingly
+        //     if (response.status === 201) {
+        //         // Phone added successfully
+        //         console.log('Phone added successfully:', response.data.phone);
+        //         // Do something with the added phone data if needed
+        //     } else {
+        //         console.error('Error adding phone:', response.data.error);
+        //         // Handle other status codes (e.g., 400 for phone already exists, 500 for server error)
+        //     }
+        // } catch (error) {
+        //     console.error('Error:', error);
+        //     // Handle network errors or other exceptions
+        // }
+        setShowAlert(true);
     };
-    
-
-
-
 
     // const pickImage = () => {
 
     // };
-
-
 
 
     // const renderItem = ({ item }) => (
@@ -131,6 +113,25 @@ const AddPhoneScreen = ({ navigation }) => {
                 >
                     <Text style={styles.btnText}>Add Phone</Text>
                 </TouchableHighlight>
+
+                <Modal
+                    visible={showAlert}
+                    transparent
+                    animationType="fade"
+                    onRequestClose={() => setShowAlert(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.alertContainer}>
+                            <Text style={styles.alertTitle}>Phone Added</Text>
+                            <Text style={styles.alertMessage}>The phone has been successfully added.</Text>
+                            <TouchableOpacity onPress={() => setShowAlert(false)}>
+                                <Text style={styles.alertButton}>OK</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+
             </View>
 
             {/* <FlatList
@@ -195,6 +196,31 @@ const styles = StyleSheet.create({
     },
     buttonSpacing: {
         marginBottom: 10,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    },
+    alertContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+    },
+    alertTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    alertMessage: {
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    alertButton: {
+        fontSize: 16,
+        color: 'blue',
     },
 });
 
